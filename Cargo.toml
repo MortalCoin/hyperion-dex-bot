@@ -1,0 +1,18 @@
+[package]
+name = "hyperion_dex_bot"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+alloy = { version = "1", features = ["full"] }
+alloy-sol-types = "1"
+alloy-contract = "1"
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+rand = "0.9"
+serde = { version = "1", features = ["derive"] }
+thiserror = "2"
+tokio = { version = "1", features = ["full"] }
+toml = "0.9"
+tracing = "0.1"
+tracing-subscriber = "0.3"
