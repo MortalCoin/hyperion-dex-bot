@@ -5,18 +5,8 @@ rpc_url = "https://hyperion-testnet.metisdevops.link"
 # IMPORTANT: This is just an example. Never commit your real private key to version control!
 private_key = "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
 
-# List of UniswapV2 pools to trade on
-[[pools]]
-# ETH-USDC pair on Uniswap V2
-address = "0xB4e16d0168e52d35CaCD2c6185b44281Ec28C9Dc"
-name = "ETH-USDC"
-
-[[pools]]
-# ETH-USDT pair on Uniswap V2
-address = "0x0d4a11d5EEaaC28EC3F61d100daF4d40471f1852"
-name = "ETH-USDT"
-
-[[pools]]
-# WBTC-ETH pair on Uniswap V2
-address = "0xBb2b8038a1640196FbE3e38816F3e67Cba72D940"
-name = "WBTC-ETH"
+# List of pairs to trade, need to have a direct UniswapV2Pair
+[[pairs]]
+name = "USDT-WETH"
+token0 = "0x3c099E287eC71b4AA61A7110287D715389329237"
+token1 = "0x9AB236Ec38492099a4d35552e6dC7D9442607f9A"

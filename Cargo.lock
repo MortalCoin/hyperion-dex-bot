@@ -1998,6 +1998,7 @@ dependencies = [
  "alloy-sol-types",
  "anyhow",
  "clap",
+ "futures",
  "rand 0.9.1",
  "serde",
  "thiserror",
