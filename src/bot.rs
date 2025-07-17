@@ -1,30 +1,15 @@
-use crate::config::{Config, PoolConfig};
-use crate::uniswap::{IERC20, IUniswapV2Router, UniswapClient};
+use crate::config::Config;
+use crate::uniswap::{IERC20, IUniswapV2Router};
 use alloy::primitives::{Address, U256};
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use anyhow::Result;
 use futures::future::join_all;
-use rand::Rng;
 use rand::prelude::SliceRandom;
-use std::ops::Div;
-use std::time::{Duration, SystemTime, UNIX_EPOCH};
+use std::time::Duration;
 use tokio::task::JoinHandle;
-use tokio::time;
 use tokio::time::sleep;
-use tracing::{debug, error, info, warn};
-
-/// Represents the state of a trading pool
-struct PoolState {
-    /// The pool configuration
-    config: PoolConfig,
-    /// The token0 address
-    token0: Address,
-    /// The token1 address
-    token1: Address,
-    /// Last trade direction (true if token0 -> token1, false if token1 -> token0)
-    last_direction: bool,
-}
+use tracing::{error, info};
 
 /// The trading bot
 pub struct TradingBot {

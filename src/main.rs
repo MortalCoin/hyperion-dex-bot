@@ -2,9 +2,7 @@ use anyhow::{Context, Result};
 use clap::Parser;
 use hyperion_dex_bot::{Config, TradingBot};
 use std::path::PathBuf;
-use std::time::Duration;
-use tokio::time::sleep;
-use tracing::{error, info};
+use tracing::info;
 use tracing_subscriber::FmtSubscriber;
 
 /// UniswapV2 trading bot
