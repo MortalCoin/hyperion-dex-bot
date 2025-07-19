@@ -47,8 +47,20 @@ impl TradingBot {
                     tokens.shuffle(&mut rand::rng());
 
                     let input_balance = tokens[0].balanceOf(wallet_address).call().await.unwrap();
-                    if let Err(e) = tokens[0].approve(router, U256::MAX).send().await {
-                        error!("Approve tx error: {}", e);
+                    let allowance = tokens[0]
+                        .allowance(wallet_address, router)
+                        .call()
+                        .await
+                        .unwrap();
+                    if allowance < input_balance {
+                        if let Err(e) = tokens[0]
+                            .approve(router, U256::MAX)
+                            .max_priority_fee_per_gas(3_000_000_000u128)
+                            .send()
+                            .await
+                        {
+                            error!("Approve tx error: {}", e);
+                        }
                     }
 
                     let expiration = U256::MAX;
@@ -60,6 +72,7 @@ impl TradingBot {
                             wallet_address,
                             expiration,
                         )
+                        .max_priority_fee_per_gas(3_000_000_000u128)
                         .send()
                         .await
                     {
