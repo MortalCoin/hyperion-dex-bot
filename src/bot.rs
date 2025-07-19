@@ -25,6 +25,7 @@ impl TradingBot {
 
         // Create provider
         let provider = ProviderBuilder::new()
+            .with_cached_nonce_management()
             .wallet(wallet)
             .connect_http(config.rpc_url.parse()?);
 
