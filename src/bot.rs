@@ -53,12 +53,7 @@ impl TradingBot {
                         .await
                         .unwrap();
                     if allowance < input_balance {
-                        if let Err(e) = tokens[0]
-                            .approve(router, U256::MAX)
-                            .max_priority_fee_per_gas(3_000_000_000u128)
-                            .send()
-                            .await
-                        {
+                        if let Err(e) = tokens[0].approve(router, U256::MAX).send().await {
                             error!("Approve tx error: {}", e);
                         }
                     }
@@ -72,7 +67,6 @@ impl TradingBot {
                             wallet_address,
                             expiration,
                         )
-                        .max_priority_fee_per_gas(3_000_000_000u128)
                         .send()
                         .await
                     {
