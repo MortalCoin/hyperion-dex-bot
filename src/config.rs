@@ -19,12 +19,15 @@ pub struct PoolConfig {
     pub name: String,
     pub token0: Address,
     pub token1: Address,
+    pub kuma_push: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Config {
     /// Ethereum RPC URL
     pub rpc_url: String,
+    /// Kuma Push URL
+    pub general_kuma_push: String,
     /// Private key for the trading account (hex string without 0x prefix)
     pub private_key: String,
     /// List of pairs to trade
