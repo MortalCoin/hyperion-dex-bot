@@ -5,13 +5,16 @@ rpc_url = "https://hyperion-testnet.metisdevops.link"
 # IMPORTANT: This is just an example. Never commit your real private key to version control!
 private_key = "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
 
-# Push URL used to track that bot is actually running
-general_kuma_push = "http://kuma/api/push/pushID"
+# Base URL for Kuma Push service
+base_kuma_url = "http://kuma"
+
+# Push ID used to track that bot is actually running
+general_push_id = "pushID"
 
 # List of pairs to trade, need to have a direct UniswapV2Pair
-# Contains Kuma push URL to monitor status of specific pair
+# Contains Kuma push ID to monitor status of specific pair
 [[pairs]]
 name = "USDT-WETH"
 token0 = "0x3c099E287eC71b4AA61A7110287D715389329237"
 token1 = "0x9AB236Ec38492099a4d35552e6dC7D9442607f9A"
-kuma_push = "http://kuma/api/push/pushID"
+kuma_push_id = "pushID"
