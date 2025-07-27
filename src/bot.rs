@@ -55,18 +55,6 @@ impl TradingBot {
                     (token1_contract, token1_decimals),
                 ];
 
-                // Send initial status update
-                if let Err(e) = kuma_client
-                    .push(
-                        &kuma_push_id,
-                        KumaStatus::Up,
-                        Some("Pair monitoring started"),
-                    )
-                    .await
-                {
-                    error!("Failed to send status update to Kuma push: {}", e);
-                }
-
                 loop {
                     tokens.shuffle(&mut rand::rng());
 
@@ -102,7 +90,12 @@ impl TradingBot {
                         continue;
                     }
 
-                    if input_balance < threshold {}
+                    if let Err(e) = kuma_client
+                        .push(&kuma_push_id, KumaStatus::Up, Some("Pair monitoring is up"))
+                        .await
+                    {
+                        error!("Failed to send status update to Kuma push: {}", e);
+                    }
 
                     let expiration = U256::MAX;
                     match router_contract
@@ -119,26 +112,9 @@ impl TradingBot {
                         Ok(pending) => {
                             let tx_hash = pending.tx_hash();
                             info!("Swap tx hash: {}", tx_hash);
-
-                            let msg = format!("Swap successful: {}", tx_hash);
-                            if let Err(e) = kuma_client
-                                .push(&kuma_push_id, KumaStatus::Up, Some(&msg))
-                                .await
-                            {
-                                error!("Failed to send status update to Kuma push: {}", e);
-                            }
                         }
                         Err(e) => {
                             error!("Swap tx error: {}", e);
-
-                            let msg = format!("Swap failed: {}", e);
-                            if let Err(push_err) = kuma_client
-                                .push(&kuma_push_id, KumaStatus::Down, Some(&msg))
-                                .await
-                            {
-                                error!("Failed to send status update to Kuma push: {}", push_err);
-                            }
-
                             sleep(Duration::from_secs(1)).await;
                             continue;
                         }
