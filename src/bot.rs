@@ -51,8 +51,8 @@ impl TradingBot {
                 let token1_decimals = token1_contract.decimals().call().await.unwrap();
 
                 let mut tokens = [
-                    (token0_contract, token0_decimals),
-                    (token1_contract, token1_decimals),
+                    (token0_contract, token0_decimals, pair.min_balance0),
+                    (token1_contract, token1_decimals, pair.min_balance1),
                 ];
 
                 loop {
@@ -72,8 +72,7 @@ impl TradingBot {
                         }
                     }
 
-                    let decimals_diff = tokens[0].1 / 3;
-                    let threshold = U256::from(10u64).pow(U256::from(tokens[0].1 - decimals_diff));
+                    let threshold = U256::from(tokens[0].2);
                     if input_balance < threshold {
                         let symbol = tokens[0].0.symbol().call().await.unwrap();
                         let msg = format!(

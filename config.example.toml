@@ -16,5 +16,7 @@ general_push_id = "pushID"
 [[pairs]]
 name = "USDT-WETH"
 token0 = "0x3c099E287eC71b4AA61A7110287D715389329237"
+min_balance0 = 1000000
 token1 = "0x9AB236Ec38492099a4d35552e6dC7D9442607f9A"
+min_balance1 = 1000000000000
 kuma_push_id = "pushID"

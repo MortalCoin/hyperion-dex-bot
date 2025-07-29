@@ -18,7 +18,9 @@ pub enum ConfigError {
 pub struct PoolConfig {
     pub name: String,
     pub token0: Address,
+    pub min_balance0: u64,
     pub token1: Address,
+    pub min_balance1: u64,
     pub kuma_push_id: String,
 }
 
