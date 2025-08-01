@@ -28,6 +28,8 @@ pub struct PoolConfig {
 pub struct Config {
     /// Ethereum RPC URL
     pub rpc_url: String,
+    /// Address of Uniswap V2 router
+    pub uniswap_v2_router: Address,
     /// Base URL for Kuma Push service
     pub base_kuma_url: String,
     /// General Kuma Push ID for monitoring the bot

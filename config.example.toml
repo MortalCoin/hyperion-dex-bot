@@ -11,6 +11,9 @@ base_kuma_url = "http://kuma"
 # Push ID used to track that bot is actually running
 general_push_id = "pushID"
 
+# The address of Uniswap V2 router
+uniswap_v2_router = "0xa1cF48c109f8B5eEe38B406591FE27f11f685a1f"
+
 # List of pairs to trade, need to have a direct UniswapV2Pair
 # Contains Kuma push ID to monitor status of specific pair
 [[pairs]]

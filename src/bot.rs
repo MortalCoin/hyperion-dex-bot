@@ -1,7 +1,7 @@
 use crate::config::Config;
 use crate::contracts::{IERC20, IUniswapV2Router};
 use crate::kuma::{KumaPushClient, KumaStatus};
-use alloy::primitives::{Address, U256};
+use alloy::primitives::U256;
 use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use anyhow::Result;
@@ -31,10 +31,7 @@ impl TradingBot {
             .wallet(wallet)
             .connect_http(config.rpc_url.parse()?);
 
-        // Uniswap V2 Router address (Hyperion)
-        let router: Address = "0xa1cF48c109f8B5eEe38B406591FE27f11f685a1f".parse()?;
-
-        let router_contract = IUniswapV2Router::new(router, provider.clone());
+        let router_contract = IUniswapV2Router::new(config.uniswap_v2_router, provider.clone());
         let mut handles = Vec::with_capacity(config.pairs.len());
 
         for pair in config.pairs {
@@ -61,13 +58,18 @@ impl TradingBot {
                     let input_balance = tokens[0].0.balanceOf(wallet_address).call().await.unwrap();
                     let allowance = tokens[0]
                         .0
-                        .allowance(wallet_address, router)
+                        .allowance(wallet_address, *router_contract.address())
                         .call()
                         .await
                         .unwrap();
 
                     if allowance < input_balance {
-                        if let Err(e) = tokens[0].0.approve(router, U256::MAX).send().await {
+                        if let Err(e) = tokens[0]
+                            .0
+                            .approve(*router_contract.address(), U256::MAX)
+                            .send()
+                            .await
+                        {
                             error!("Approve tx error: {}", e);
                         }
                     }
