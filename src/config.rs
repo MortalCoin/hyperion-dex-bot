@@ -30,6 +30,8 @@ pub struct Config {
     pub rpc_url: String,
     /// Address of Uniswap V2 router
     pub uniswap_v2_router: Address,
+    /// Address of Mortal Coin game contract
+    pub game_contract: Address,
     /// Base URL for Kuma Push service
     pub base_kuma_url: String,
     /// General Kuma Push ID for monitoring the bot

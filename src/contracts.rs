@@ -10,6 +10,7 @@ sol! {
           address to,
           uint deadline
         ) external returns (uint[] memory amounts);
+        function getAmountsOut(uint amountIn, address[] memory path) public view returns (uint[] memory amounts);
     }
 }
 
@@ -22,5 +23,12 @@ sol!(
         function decimals() external view returns (uint8);
         function name() external view returns (string memory);
         function symbol() external view returns (string memory);
+    }
+);
+
+sol!(
+    #[sol(rpc)]
+    contract GameContract {
+        function activeGames() external view returns (uint256);
     }
 );
