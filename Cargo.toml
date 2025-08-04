@@ -10,6 +10,7 @@ alloy-contract = "1"
 anyhow = "1"
 clap = { version = "4", features = ["derive"] }
 futures = "0.3"
+rand = "0.9"
 reqwest = "0.12"
 serde = { version = "1", features = ["derive"] }
 thiserror = "2"

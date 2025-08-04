@@ -7,6 +7,7 @@ use alloy::providers::ProviderBuilder;
 use alloy::signers::local::PrivateKeySigner;
 use anyhow::Result;
 use futures::future::join_all;
+use rand::prelude::SliceRandom;
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::task::JoinHandle;
@@ -63,7 +64,7 @@ impl TradingBot {
                 ];
 
                 loop {
-                    tokens.swap(0, 1);
+                    tokens.shuffle(&mut rand::rng());
 
                     let input_balance = tokens[0]
                         .contract

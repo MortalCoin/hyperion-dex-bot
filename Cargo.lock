@@ -2052,6 +2052,7 @@ dependencies = [
  "anyhow",
  "clap",
  "futures",
+ "rand 0.9.1",
  "reqwest",
  "serde",
  "thiserror",
