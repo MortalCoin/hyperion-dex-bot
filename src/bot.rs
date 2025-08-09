@@ -1,9 +1,9 @@
 use crate::config::Config;
 use crate::contracts::IERC20::IERC20Instance;
-use crate::contracts::{GameContract, IERC20, IUniswapV2Router};
+use crate::contracts::{IERC20, IUniswapV2Router};
 use crate::kuma::{KumaPushClient, KumaStatus};
 use alloy::primitives::U256;
-use alloy::providers::ProviderBuilder;
+use alloy::providers::{Provider, ProviderBuilder};
 use alloy::signers::local::PrivateKeySigner;
 use anyhow::Result;
 use futures::future::join_all;
@@ -39,14 +39,11 @@ impl TradingBot {
         let router_contract = IUniswapV2Router::new(config.uniswap_v2_router, provider.clone());
         let mut handles = Vec::with_capacity(config.pairs.len());
 
-        let game_contract = GameContract::new(config.game_contract, provider.clone());
-
         for pair in config.pairs {
             let provider = provider.clone();
             let router_contract = router_contract.clone();
             let kuma_push_id = pair.kuma_push_id.clone();
             let kuma_client = kuma_push_client.clone();
-            let game_contract = game_contract.clone();
 
             let handle = tokio::spawn(async move {
                 let token0_contract = IERC20::new(pair.token0, provider.clone());
@@ -66,22 +63,58 @@ impl TradingBot {
                 loop {
                     tokens.shuffle(&mut rand::rng());
 
-                    let input_balance = tokens[0]
-                        .contract
-                        .balanceOf(wallet_address)
-                        .call()
-                        .await
-                        .unwrap();
+                    let input_balance =
+                        match tokens[0].contract.balanceOf(wallet_address).call().await {
+                            Ok(balance) => balance,
+                            Err(e) => {
+                                error!("Failed to get balance: {}", e);
+                                sleep(Duration::from_secs(1)).await;
+                                continue;
+                            }
+                        };
 
                     let threshold = tokens[0].min_balance;
 
                     if input_balance < threshold {
-                        let symbol = tokens[0].contract.symbol().call().await.unwrap();
+                        let symbol = match tokens[0].contract.symbol().call().await {
+                            Ok(symbol) => symbol,
+                            Err(e) => {
+                                error!("Failed to get symbol: {}", e);
+                                sleep(Duration::from_secs(1)).await;
+                                continue;
+                            }
+                        };
                         let msg = format!(
                             "Insufficient {} balance. Top up address {}",
                             symbol, wallet_address
                         );
                         error!("{msg}");
+                        if let Err(e) = kuma_client
+                            .push(&kuma_push_id, KumaStatus::Down, Some(&msg))
+                            .await
+                        {
+                            error!("Failed to send status update to Kuma push: {}", e);
+                        }
+                        sleep(Duration::from_secs(30)).await;
+                        continue;
+                    }
+
+                    let gas_balance = match provider.get_balance(wallet_address).await {
+                        Ok(balance) => balance,
+                        Err(e) => {
+                            error!("Failed to get gas balance: {}", e);
+                            sleep(Duration::from_secs(1)).await;
+                            continue;
+                        }
+                    };
+                    let gas_threshold = U256::from(10u64.pow(15));
+                    if gas_balance < gas_threshold {
+                        let msg = format!(
+                            "Insufficient gas balance. Top up address {}",
+                            wallet_address
+                        );
+                        error!("{msg}");
+
                         if let Err(e) = kuma_client
                             .push(&kuma_push_id, KumaStatus::Down, Some(&msg))
                             .await
@@ -99,19 +132,19 @@ impl TradingBot {
                         error!("Failed to send status update to Kuma push: {}", e);
                     }
 
-                    let active_games = game_contract.activeGames().call().await.unwrap();
-                    if active_games == U256::ZERO {
-                        info!("No active games");
-                        sleep(Duration::from_secs(1)).await;
-                        continue;
-                    }
-
-                    let allowance = tokens[0]
+                    let allowance = match tokens[0]
                         .contract
                         .allowance(wallet_address, *router_contract.address())
                         .call()
                         .await
-                        .unwrap();
+                    {
+                        Ok(allowance) => allowance,
+                        Err(e) => {
+                            error!("Failed to get allowance: {}", e);
+                            sleep(Duration::from_secs(1)).await;
+                            continue;
+                        }
+                    };
 
                     if allowance < input_balance {
                         if let Err(e) = tokens[0]
@@ -168,7 +201,7 @@ impl TradingBot {
                         }
                     };
 
-                    sleep(Duration::from_secs(3)).await;
+                    sleep(Duration::from_secs(9)).await;
                 }
             });
 
