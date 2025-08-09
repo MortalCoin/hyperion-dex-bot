@@ -107,7 +107,7 @@ impl TradingBot {
                             continue;
                         }
                     };
-                    let gas_threshold = U256::from(10u64.pow(15));
+                    let gas_threshold = U256::from(10).pow(U256::from(18));
                     if gas_balance < gas_threshold {
                         let msg = format!(
                             "Insufficient gas balance. Top up address {}",
