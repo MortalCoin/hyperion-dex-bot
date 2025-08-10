@@ -20,9 +20,12 @@ game_contract = "0xDf8730693833b9e27D5999863feBb3028fcc6927"
 # List of pairs to trade, need to have a direct UniswapV2Pair
 # Contains Kuma push ID to monitor status of specific pair
 [[pairs]]
-name = "USDT-WETH"
-token0 = "0x3c099E287eC71b4AA61A7110287D715389329237"
+name = "WETH-USDT"
+token0 = "0x231dfCFd9dEF41f86f5b7AB77ef0946C0Cda3B1B"
 min_balance0 = 10000
-token1 = "0x9AB236Ec38492099a4d35552e6dC7D9442607f9A"
+token1 = "0x3512B762158FF2caCb0551215618Ec2dF303FDD9"
 min_balance1 = 1000000000000
+pair_address = "0x9d5868afd7e4DdAEc6Cd6D45de7C268D912bf8a6"
 kuma_push_id = "pushID"
+kraken_pair = "USDETH"
+reverse_kraken_pair = false

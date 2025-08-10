@@ -21,7 +21,14 @@ pub struct PoolConfig {
     pub min_balance0: u64,
     pub token1: Address,
     pub min_balance1: u64,
+    /// Address of the UniswapV2Pair for this pair
+    pub pair_address: Address,
     pub kuma_push_id: String,
+    /// Kraken ticker pair, e.g. "ETHUSD"
+    pub kraken_pair: String,
+    /// If true, invert the fetched Kraken price (1/price)
+    #[serde(default)]
+    pub reverse_kraken_pair: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
