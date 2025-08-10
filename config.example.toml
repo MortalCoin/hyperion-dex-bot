@@ -27,5 +27,5 @@ token1 = "0x3512B762158FF2caCb0551215618Ec2dF303FDD9"
 min_balance1 = 1000000000000
 pair_address = "0x9d5868afd7e4DdAEc6Cd6D45de7C268D912bf8a6"
 kuma_push_id = "pushID"
-kraken_pair = "USDETH"
+kraken_pair = "ETHUSD"
 reverse_kraken_pair = false
